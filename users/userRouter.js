@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("./userDb");
+const Post = require("../posts/postDb");
 const router = express.Router();
 
 router.post("/users", validateUser, async (req, res) => {
@@ -73,6 +74,15 @@ async function validateUser(req, res, next) {
   next();
 }
 
-// function validatePost(req, res, next) {}
+async function validatePost(req, res, next) {
+  const { text } = req.body;
+  if (!req.body) {
+    return res.status(400).json({ message: "missing post data" });
+  }
+  if (!text) {
+    return res.status(400).json({ message: "missing required text field" });
+  }
+  next();
+}
 
 module.exports = router;
