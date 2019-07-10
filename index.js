@@ -6,6 +6,7 @@ const userRoutes = require("./users/userRouter");
 const server = express();
 
 server.use(express.json());
+server.use(express.urlencoded({ extended: true }));
 
 //custom middleware
 function logger(req, res, next) {
@@ -16,7 +17,6 @@ function logger(req, res, next) {
 
 server.use(logger);
 
-server.use(express.urlencoded({ extended: true }));
 
 server.use("/api", userRoutes);
 

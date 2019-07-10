@@ -2,9 +2,17 @@ const express = require("express");
 const User = require("./userDb");
 const router = express.Router();
 
-// router.post("/users", async(req, res) => {
-
-// });
+router.post("/users", validateUser, async (req, res) => {
+  try {
+    const { body } = req;
+    const newUser = await User.insert(body);
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error creating users"
+    });
+  }
+});
 
 // router.post("/:id/posts", (req, res) => {});
 
@@ -56,9 +64,13 @@ async function validateUserId(req, res, next) {
 
 async function validateUser(req, res, next) {
   const { name } = req.body;
-  if (!name) {
-    return res.status(404).json({ message: "missing user data" });
+  if (!req.body) {
+    return res.status(400).json({ message: "missing user data" });
   }
+  if (!name) {
+    return res.status(400).json({ message: "missing user name" });
+  }
+  next();
 }
 
 // function validatePost(req, res, next) {}
