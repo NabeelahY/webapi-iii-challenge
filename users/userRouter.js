@@ -17,7 +17,15 @@ router.get("/users", async (req, res) => {
   }
 });
 
-// router.get("/:id", (req, res) => {});
+router.get("/users/:id", validateUserId, async (req, res) => {
+  try {
+    res.status(200).json({ user: req.user });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error retrieving the user"
+    });
+  }
+});
 
 // router.get("/:id/posts", (req, res) => {});
 
@@ -27,21 +35,21 @@ router.get("/users", async (req, res) => {
 
 //custom middleware
 
-function validateUserId(req, res, next) {
-    const { id } = req.params;
+async function validateUserId(req, res, next) {
+  const { id } = req.params;
 
-    if(isNaN(parseInt(id, 10))) {
-        return res.status(400).json({message: "IDs should be a numerical value"})
-    }
+  if (isNaN(parseInt(id, 10))) {
+    return res.status(400).json({ message: "IDs should be a numerical value" });
+  }
 
-    const user = await User.getById(id);
+  const user = await User.getById(id);
 
-    if(!user) {
-         res.end.status(404).json({message: "Invalid user id"})
-    } else {
-        req.user = user;
-        next()
-    }
+  if (!user) {
+    return res.status(404).json({ message: "Invalid user id" });
+  } else {
+    req.user = user;
+    next();
+  }
 }
 
 // function validateUser(req, res, next) {}
