@@ -2,7 +2,9 @@ const express = require("express");
 const User = require("./userDb");
 const router = express.Router();
 
-// router.post("/", (req, res) => {});
+// router.post("/users", async(req, res) => {
+
+// });
 
 // router.post("/:id/posts", (req, res) => {});
 
@@ -52,7 +54,12 @@ async function validateUserId(req, res, next) {
   }
 }
 
-// function validateUser(req, res, next) {}
+async function validateUser(req, res, next) {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(404).json({ message: "missing user data" });
+  }
+}
 
 // function validatePost(req, res, next) {}
 
