@@ -1,15 +1,26 @@
-const express = 'express';
+// const express = require("express");
 
-const server = express();
+// const userRoutes = require("./users/userRouter");
 
-server.get('/', (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`)
-});
+// const server = express();
 
-//custom middleware
+// server.use(express.json());
+// server.use(express.urlencoded({ extended: true }));
 
-function logger(req, res, next) {
+// server.use("/api", userRoutes);
 
-};
+// server.get("/", (req, res) => {
+//   res.send(`<h2>Let's write some middleware!</h2>`);
+// });
 
-module.exports = server;
+// //custom middleware
+
+// // function logger(req, res, next) {
+
+// // };
+
+// server.listen(6000, () => {
+//   console.log("listening on 5000");
+// });
+
+// module.exports = server;
