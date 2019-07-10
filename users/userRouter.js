@@ -27,7 +27,22 @@ router.get("/users", async (req, res) => {
 
 //custom middleware
 
-// function validateUserId(req, res, next) {}
+function validateUserId(req, res, next) {
+    const { id } = req.params;
+
+    if(isNaN(parseInt(id, 10))) {
+        return res.status(400).json({message: "IDs should be a numerical value"})
+    }
+
+    const user = await User.getById(id);
+
+    if(!user) {
+         res.end.status(404).json({message: "Invalid user id"})
+    } else {
+        req.user = user;
+        next()
+    }
+}
 
 // function validateUser(req, res, next) {}
 
