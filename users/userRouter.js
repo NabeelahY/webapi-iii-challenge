@@ -49,7 +49,16 @@ router.get("/users/:id", validateUserId, async (req, res) => {
   }
 });
 
-// router.get("/:id/posts", (req, res) => {});
+router.get("/:id/posts", validateUserId, async (req, res) => {
+  try {
+    const userPosts = await User.getUserPosts(req.params.id);
+    res.status(200).json(userPosts);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error retrieving the user"
+    });
+  }
+});
 
 // router.delete("/:id", (req, res) => {});
 
@@ -65,7 +74,7 @@ async function validateUserId(req, res, next) {
   }
 
   const user = await User.getById(id);
-  
+
   if (!user) {
     return res.status(404).json({ message: "Invalid user id" });
   } else {
