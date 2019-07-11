@@ -15,7 +15,18 @@ router.post("/users", validateUser, async (req, res) => {
   }
 });
 
-// router.post("/:id/posts", (req, res) => {});
+router.post("/:id/posts", validateUserId, validatePost, async (req, res) => {
+  try {
+    const { body, params } = req;
+    const bodyWithId = { ...body, user_id: params.id };
+    const newPost = await Post.insert(bodyWithId);
+    res.status(201).json(newPost);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error creating post"
+    });
+  }
+});
 
 router.get("/users", async (req, res) => {
   try {
@@ -54,7 +65,7 @@ async function validateUserId(req, res, next) {
   }
 
   const user = await User.getById(id);
-
+  
   if (!user) {
     return res.status(404).json({ message: "Invalid user id" });
   } else {
