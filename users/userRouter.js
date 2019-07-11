@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("./userDb");
 const Post = require("../posts/postDb");
 const router = express.Router();
+const {validateUserId, validatePost, validateUser} = require('../middleware/index')
 
 router.post("/users", validateUser, async (req, res) => {
   try {
@@ -64,45 +65,6 @@ router.get("/:id/posts", validateUserId, async (req, res) => {
 
 // router.put("/:id", (req, res) => {});
 
-//custom middleware
 
-async function validateUserId(req, res, next) {
-  const { id } = req.params;
-
-  if (isNaN(parseInt(id, 10))) {
-    return res.status(400).json({ message: "IDs should be a numerical value" });
-  }
-
-  const user = await User.getById(id);
-
-  if (!user) {
-    return res.status(404).json({ message: "Invalid user id" });
-  } else {
-    req.user = user;
-    next();
-  }
-}
-
-async function validateUser(req, res, next) {
-  const { name } = req.body;
-  if (!req.body) {
-    return res.status(400).json({ message: "missing user data" });
-  }
-  if (!name) {
-    return res.status(400).json({ message: "missing user name" });
-  }
-  next();
-}
-
-async function validatePost(req, res, next) {
-  const { text } = req.body;
-  if (!req.body) {
-    return res.status(400).json({ message: "missing post data" });
-  }
-  if (!text) {
-    return res.status(400).json({ message: "missing required text field" });
-  }
-  next();
-}
 
 module.exports = router;
