@@ -2,9 +2,13 @@ const express = require("express");
 const User = require("./userDb");
 const Post = require("../posts/postDb");
 const router = express.Router();
-const {validateUserId, validatePost, validateUser} = require('../middleware/index')
+const {
+  validateUserId,
+  validatePost,
+  validateUser
+} = require("../middleware/index");
 
-router.post("/users", validateUser, async (req, res) => {
+router.post("/", validateUser, async (req, res) => {
   try {
     const { body } = req;
     const newUser = await User.insert(body);
@@ -29,7 +33,7 @@ router.post("/:id/posts", validateUserId, validatePost, async (req, res) => {
   }
 });
 
-router.get("/users", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const posts = await User.get(req.query);
     res.status(200).json(posts);
@@ -40,7 +44,7 @@ router.get("/users", async (req, res) => {
   }
 });
 
-router.get("/users/:id", validateUserId, async (req, res) => {
+router.get("/:id", validateUserId, async (req, res) => {
   try {
     res.status(200).json({ user: req.user });
   } catch (error) {
@@ -61,10 +65,17 @@ router.get("/:id/posts", validateUserId, async (req, res) => {
   }
 });
 
-// router.delete("/:id", (req, res) => {});
+router.delete("/:id", validateUserId, async (req, res) => {
+  try {
+    await User.remove(req.params.id);
+    res.status(200).json({ user: req.user });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error deleting the user"
+    });
+  }
+});
 
 // router.put("/:id", (req, res) => {});
-
-
 
 module.exports = router;
