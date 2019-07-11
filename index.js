@@ -1,32 +1,8 @@
-// code away!
-const express = require("express");
+require("dotenv").config()
+const server = require('./server')
 
-const userRoutes = require("./users/userRouter");
+const port = process.env.PORT || 5000;
 
-const server = express();
-
-server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
-
-//custom middleware
-function logger(req, res, next) {
-  console.log(`[${new Date().toISOString()}] ${req.method} to ${req.url}`);
-
-  next();
-}
-
-server.use(logger);
-
-
-server.use("/api/users", userRoutes);
-
-server.get("/", (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`);
+server.listen(port, () => {
+  console.log(`*** Server Running on http://localhost:${port} ***`);
 });
-
-
-server.listen(5000, () => {
-  console.log("listening on 5000");
-});
-
-module.exports = server;

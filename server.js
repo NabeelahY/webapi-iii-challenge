@@ -1,26 +1,27 @@
-// const express = require("express");
+// code away!
+const express = require("express");
 
-// const userRoutes = require("./users/userRouter");
+const userRoutes = require("./users/userRouter");
 
-// const server = express();
+const server = express();
 
-// server.use(express.json());
-// server.use(express.urlencoded({ extended: true }));
+server.use(express.json());
+server.use(express.urlencoded({ extended: true }));
 
-// server.use("/api", userRoutes);
+//custom middleware
+function logger(req, res, next) {
+  console.log(`[${new Date().toISOString()}] ${req.method} to ${req.url}`);
 
-// server.get("/", (req, res) => {
-//   res.send(`<h2>Let's write some middleware!</h2>`);
-// });
+  next();
+}
 
-// //custom middleware
+server.use(logger);
 
-// // function logger(req, res, next) {
 
-// // };
+server.use("/api/users", userRoutes);
 
-// server.listen(6000, () => {
-//   console.log("listening on 5000");
-// });
+server.get("/", (req, res) => {
+  res.send(`<h2>Let's write some middleware!</h2>`);
+});
 
-// module.exports = server;
+module.exports = server;
