@@ -76,6 +76,17 @@ router.delete("/:id", validateUserId, async (req, res) => {
   }
 });
 
-// router.put("/:id", (req, res) => {});
+router.put("/:id", validateUserId, async (req, res) => {
+  try {
+    const { name } = req.body;
+    await User.update(req.params.id, { name });
+    const editedUser = await User.getById(req.params.id);
+    res.status(200).json(editedUser);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error editing the user"
+    });
+  }
+});
 
 module.exports = router;
